@@ -2,10 +2,17 @@
 
 import { createServerSupabaseClient } from "utils/supabase/server";
 
-export const getMovies = async () => {
+export const getMovies = async ({ search }) => {
   const supabase = await createServerSupabaseClient();
-  const { data, error } = await supabase.from("movies").select("*");
-  console.log(data);
+  let query = supabase.from("movies").select("*");
+
+  if (search) {
+    query = query.filter("title", "ilike", `%${search}%`);
+  }
+  query = query.order("popularity", { ascending: false });
+
+  const { data, error } = await query;
+
   if (error) {
     console.error("Error getting movies:", error);
     return [];

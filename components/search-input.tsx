@@ -7,7 +7,7 @@ export default function SearchInput({ search, setSearch }) {
     <Input
       value={search}
       onChange={(e) => setSearch(e.target.value)}
-      label="Search Images"
+      label="Search Movies"
       icon={<i className="fas fa-search" />}
     />
   );
