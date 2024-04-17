@@ -1,3 +1,11 @@
+import Header from "components/header";
+import MovieList from "components/movie-list";
+
 export default function Home() {
-  return <main className="">NETFLIX CLONE</main>;
+  return (
+    <main className="w-full">
+      <Header />
+      <MovieList />
+    </main>
+  );
 }
