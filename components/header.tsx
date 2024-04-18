@@ -8,10 +8,10 @@ export default function Header() {
   const [search, setSearch] = useRecoilState(searchState);
 
   return (
-    <header className="w-full flex items-center justify-between px-4 py-2 bg-gray-900">
+    <header className="w-full fixed top-0 z-20 flex items-center justify-between px-4 py-2 bg-gray-900">
       <div className="md:flex-1 items-center gap-4 flex">
         <img
-          src="/images/netflix_logo.svg"
+          src="/images/tmdbflix_logo.png"
           alt="Netflix Logo"
           className="h-6 mr-4"
         />

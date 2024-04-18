@@ -1,52 +1,67 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { getMovies } from "actions/movie-actions";
 import { useRecoilValue } from "recoil";
 import { searchState } from "utils/recoil/state";
+import MovieCard from "./movie-card";
+import { useEffect, useState } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 
 export default function MovieList() {
   const search = useRecoilValue(searchState);
 
-  const moviesQuery = useQuery({
-    queryKey: ["movies", search],
-    queryFn: () => getMovies({ search }),
+  const { ref, inView } = useInView();
+
+  const {
+    data,
+    isFetching,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    initialPageParam: 1,
+    queryKey: ["movies", { search }],
+    queryFn: ({ pageParam = 1 }) =>
+      getMovies({ search, page: pageParam, pageSize: 20 }),
+    getNextPageParam: (lastPage) =>
+      lastPage.page ? lastPage.page + 1 : undefined,
   });
 
+  useEffect(() => {
+    if (
+      inView &&
+      hasNextPage &&
+      !isFetching &&
+      !isFetchingNextPage &&
+      !isFetchingPreviousPage
+    ) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage]);
+
   return (
-    <div className="w-full p-4 grid md:grid-cols-4 grid-cols-3 gap-4">
-      {moviesQuery.data &&
-        moviesQuery.data.map(
+    <div className="w-full grid md:grid-cols-4 grid-cols-3 gap-4 px-4 py-14">
+      {data?.pages
+        ?.map((page) => page.data)
+        ?.flat()
+        ?.map(
           (
-            {
-              image_url,
-              title,
-              overview,
-              vote_average,
-              release_date,
-              poopularity,
-            },
+            { image_url, title, overview, vote_average, release_date },
             index
           ) => (
-            <div className="col-span-1 relative" key={index}>
-              <img className="w-full" src={image_url} />
-              <div className="flex flex-col text-center p-2 absolute top-0 bottom-0 left-0 right-0 items-center justify-center opacity-0 hover:opacity-80 transition-opacity duration-300 bg-black">
-                <div className="text-white text-xl mb-2 font-bold">{title}</div>
-                <div className="text-white text-sm mb-2">
-                  {overview.slice(0, 200)}
-                  {overview.length > 200 ? "..." : ""}
-                </div>
-                <div className="text-white text-md">
-                  <i className="fas fa-star" /> Vote Average :{" "}
-                  {parseInt(vote_average)} / 10
-                </div>
-                <div className="text-white text-md">
-                  Release Date : {release_date}
-                </div>
-              </div>
-            </div>
+            <MovieCard
+              key={index}
+              imageUrl={image_url}
+              title={title}
+              overview={overview}
+              voteAverage={vote_average}
+              releaseDate={release_date}
+            />
           )
         )}
+      <div ref={ref}></div>
     </div>
   );
 }
