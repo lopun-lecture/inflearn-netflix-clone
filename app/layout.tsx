@@ -5,6 +5,8 @@ import "./globals.css";
 import ReactQueryClientProviders from "config/ReactQueryClientProvider";
 import { ThemeProvider } from "components/material-tailwind";
 import { RecoilRoot } from "recoil";
+import Header from "components/header";
+import Footer from "components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +30,11 @@ export default function RootLayout({
                 referrerPolicy="no-referrer"
               />
             </head>
-            <body className={inter.className}>{children}</body>
+            <body className={inter.className}>
+              <Header />
+              {children}
+              <Footer />
+            </body>
           </html>
         </ThemeProvider>
       </ReactQueryClientProviders>

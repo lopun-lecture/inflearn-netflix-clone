@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 export default function MovieCard({
+  id,
   imageUrl,
   title,
   overview,
@@ -10,7 +11,7 @@ export default function MovieCard({
   releaseDate,
 }) {
   return (
-    <Link href={`https://www.themoviedb.org/search?query=${title}`}>
+    <Link href={`/movies/${id}`}>
       <div className="col-span-1 relative">
         <img className="w-full" src={imageUrl} />
         <div className="flex flex-col text-center p-2 absolute top-0 bottom-0 left-0 right-0 items-center justify-center opacity-0 hover:opacity-80 transition-opacity duration-300 bg-black">

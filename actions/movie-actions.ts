@@ -32,3 +32,19 @@ export const getMovies = async ({ search, page = 1, pageSize = 20 }) => {
     hasNextPage: count > page * pageSize,
   };
 };
+
+export const getMovie = async ({ id }) => {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("movies")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error getting movie:", error);
+    return null;
+  }
+
+  return data;
+};

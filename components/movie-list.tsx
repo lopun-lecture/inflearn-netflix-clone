@@ -48,11 +48,12 @@ export default function MovieList() {
         ?.flat()
         ?.map(
           (
-            { image_url, title, overview, vote_average, release_date },
+            { id, image_url, title, overview, vote_average, release_date },
             index
           ) => (
             <MovieCard
               key={index}
+              id={id}
               imageUrl={image_url}
               title={title}
               overview={overview}
